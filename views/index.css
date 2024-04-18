@@ -1,0 +1,26 @@
+:root {
+    --light-orange-color: #fff8f1;
+    --dark-orange-color: #ffa85a;
+    --fade-light-orange-color: #fff8f180;
+
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: var(--dark-orange-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--light-orange-color); 
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+
+body {
+    overflow-x: hidden;
+}

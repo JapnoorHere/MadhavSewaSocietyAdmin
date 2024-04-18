@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Table with EJS Data</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom styles */
+        :root {
+            --light-orange-color: #fff1e2;
+            --dark-orange-color: #ffa85a;
+            --fade-light-orange-color: #fff8f180;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            background-color: var(--dark-orange-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--light-orange-color);
+        }
+
+        * {
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid var(--light-orange-color);
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid var(--light-orange-color);
+        }
+
+        .table tbody+tbody {
+            border-top: 2px solid var(--light-orange-color);
+        }
+
+        .table td.qualification {
+            text-overflow: ellipsis;
+            max-height: 200px;
+        }
+
+        .table td .qualification-tooltip {
+            display: none;
+            /* Hide tooltip initially */
+            position: absolute;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            white-space: normal;
+            /* Allow text to wrap */
+            height: 200px;
+            /* Set a maximum width for the tooltip */
+        }
+
+        .table td div:hover .qualification-tooltip {
+            display: block;
+            /* Show tooltip on hover */
+            top: 100%;
+            /* Position tooltip below the cell */
+            left: 0;
+            /* Position tooltip to the left */
+        }
+
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: var(--light-orange-color);
+        }
+
+        @media (max-width: 575.98px) {
+            .table-responsive {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+                border: 1px solid var(--light-orange-color);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light p-3" style="background-color: #ffa85a ;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="color: white;">Madhav Sewa Society </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link mx-2 active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2" href="/volunteer">Become a volunteer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2" href="/dailyMotivation">Daily Motivation & Mudras</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link mx-2" href="/donations">Donate</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            About Us
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">Madhav Sewa Society</a></li>
+                            <li><a class="dropdown-item" href="/aboutVivekJoshi">Vivek Joshi</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Contact Us
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/differentlyAbleContactForm">Differently able Contact</a>
+                            </li>
+                            <li><a class="dropdown-item" href="/connectWithUs">Connect With Us</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark h5" href="https://www.instagram.com/vivekjoshimasoom/"
+                            target="_blank"><i style="color: white;" class="fab fa-instagram"></i></a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark h5" href="https://www.linkedin.com/company/madhav-sewa-society/"
+                            target="blank"><i style="color: white;" class="fab fa-linkedin"></i></a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link text-dark h5" href="https://www.facebook.com/madhav.sewa.soceity"
+                            target="blank"><i style="color: white;" class="fab fa-facebook-square"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>S No.</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Date of Birth</th>
+                        <th>Qualifications</th>
+                        <th>Field</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let i=0; i < volunteer.length; i++) { %>
+                        <tr>
+                            <td>
+                                <%= i+1 %>
+                            </td>
+                            <td>
+                                <%= volunteer[i].name %>
+                            </td>
+                            <td>
+                                <%= volunteer[i].email %>
+                            </td>
+                            <td>
+                                <%= volunteer[i].phoneNumber %>
+                            </td>
+                            <td>
+                                <%= volunteer[i].dateOfBirth %>
+                            </td>
+                            <td>
+                                <div style="position: relative; overflow: visible;">
+                                    <%= volunteer[i].qualification.slice(0, 10) + '...' %>
+                                        <span class="qualification-tooltip">
+                                            <%= volunteer[i].qualification %>
+                                        </span>
+                                </div>
+                            </td>
+                            <td>
+                                <%= volunteer[i].field %>
+                            </td>
+                        </tr>
+                        <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
