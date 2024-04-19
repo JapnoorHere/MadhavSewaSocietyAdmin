@@ -20,6 +20,9 @@ const volunteerSchema = new mongoose.Schema({
     },
     field: {
         type: String,
+    },
+    status : {
+        type : String
     }
 },
 {
