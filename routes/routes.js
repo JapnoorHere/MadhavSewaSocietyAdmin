@@ -6,6 +6,8 @@ const path = require('path');
 const User = require('../models/users')
 const Volunteer = require('../models/volunteer')
 const DailyMotivation = require('../models/dailyMotivation');
+const Donations = require('../models/donations')
+
 
 const { initializeApp } = require("firebase/app");
 const {getStorage, ref, getDownloadURL,uploadBytesResumable} = require("firebase/storage");
@@ -23,9 +25,6 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-
-
-
 
 
 router.get('/', (req, res) => {
@@ -140,5 +139,105 @@ router.post('/upload-daily-motivation', (req, res) => {
         }
     );
 });
+
+
+router.post('/upload-donation', (req, res) => {
+    const {donation_name,donation_description,donation_fund} = req.body;
+    
+
+    if(!req.files || Object.keys(req.files).length === 0){
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    let imageFile = req.files.donation_image;
+
+    let imageExtension = path.extname(imageFile.name);
+    let storage = getStorage(firebaseApp);
+    let storageRef = ref(storage, 'donations/' + donation_name + imageExtension);
+
+    let metadata = {
+        contentType: 'image/' + imageExtension.replace('.', '')
+    };
+
+    let uploadTask = uploadBytesResumable(storageRef, imageFile.data, metadata);
+
+    uploadTask.on('state_changed',
+    (snapshot)=>{
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+    
+    },
+    (err) =>{
+        res.status(500).send(err);
+    },
+    ()=>{
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            var donation = new Donations({
+                donation_name: donation_name,
+                donation_description: donation_description,
+                donation_fund: donation_fund,
+                donation_image_url : downloadURL
+            });
+            donation.save().then(()=>{
+                res.redirect('/donations');
+            }).catch(err => {
+                res.json({error : err});
+            });
+        });
+    
+    });
+});
+
+router.get('/donations/list',(req,res)=>{
+    function insertLineBreaks(text) {
+        let result = '';
+        let wordCount = 0;
+        let words = text.split(' ');  
+    
+        for (const word of words) {
+            result += word + ' '; 
+            wordCount++;
+            if (wordCount % 30 === 0) {
+                result += '<br>';
+            }
+        }
+        return result;
+    }
+    Donations.find().then((donations)=>{
+        res.render('donationsList',{donations: donations,insertLineBreaks: insertLineBreaks});
+    }).catch(err => {
+        console.log(err);
+    });
+})
+
+router.get('/donations/:name',(req,res)=>{
+    const donationName = req.params.name;
+    Donations.findOne({ donation_name: donationName }).then((donation) => {
+        if (donation) {
+            User.find({ _id: { $in: donation.users } }).then((users) => {
+                console.log(users);
+                res.render('donationsUserInformation', { users: users, donation: donation });
+            });
+        } else {
+            res.status(404).send('Donation not found');
+        }
+    }).catch(err => {
+        console.log(err);
+    });
+});
+
+router.get('/deleteDonation/:id',(req,res)=>{
+    const donationId = req.params.id;
+    Donations.findByIdAndDelete(donationId).then(()=>{
+        res.redirect('/donations/list');
+    }).catch(err => {
+        res.json({error : err});
+    });
+});
+
+router.get('/donations',(req,res)=>{
+    res.render('donations');
+})
 
 module.exports = router;
