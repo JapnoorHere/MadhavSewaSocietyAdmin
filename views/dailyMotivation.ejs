@@ -228,13 +228,18 @@
     <div class="form-container">
       <div class="form-content">
         <h1>Add Mudra</h1>
-        <form  class="mudra-form" action="/upload-donation" enctype="multipart/form-data" method="post">
+        <form  class="mudra-form" action="/upload-mudra" enctype="multipart/form-data" method="post">
+          <div class="upload-img">
+            <h5>Upload Image : </h5>
+            <input accept="image/*" id="mudra-img" type="file" name="mudra_img">
+          </div>
           <input type="text" placeholder="Mudra Name" name="name">
           <textarea type="text" placeholder="Mudra Description" name="description" rows="6"></textarea>
           <textarea type="text" placeholder="Steps to perform Mudra" name="perform" rows="10"></textarea>
           <textarea type="text" placeholder="Benefits" name="benefits" rows="6"></textarea>
           <textarea type="text" placeholder="Release" name="release" rows="3"></textarea>
           <textarea type="text" placeholder="Duration" name="duration" rows="3"></textarea>
+
           <button type="submit">Submit</button>
         </form>
       </div>

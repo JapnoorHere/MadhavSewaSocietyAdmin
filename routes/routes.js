@@ -7,6 +7,7 @@ const User = require('../models/users')
 const Volunteer = require('../models/volunteer')
 const DailyMotivation = require('../models/dailyMotivation');
 const Donations = require('../models/donations')
+const Mudras = require('../models/mudras');
 
 
 const { initializeApp } = require("firebase/app");
@@ -239,5 +240,54 @@ router.get('/deleteDonation/:id',(req,res)=>{
 router.get('/donations',(req,res)=>{
     res.render('donations');
 })
+
+router.post('/upload-mudra',(req,res)=>{
+    if(!req.files || Object.keys(req.files).length === 0){
+        return res.status(400).send('No files were uploaded.');
+    }
+    const {name, description, perform, benefits, release, duration} = req.body;
+
+    let imgFile = req.files.mudra_img;
+
+    let imageExtension = path.extname(imgFile.name);
+    let storage = getStorage(firebaseApp);
+    let storageRef = ref(storage, 'mudras/' + name + imageExtension);
+
+    let metadata = {
+        contentType : "image/" + imageExtension.replace('.','')
+    }
+
+    let uploadTask = uploadBytesResumable(storageRef, imgFile.data, metadata);
+
+    uploadTask.on('state_changed',
+    (snapshot)=>{
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+    },
+    (err) =>{
+        res.status(500).send(err);
+    },
+    ()=>{
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            var mudra = new Mudras({
+                name: name,
+                description: description,
+                perform: perform,
+                benefits: benefits,
+                release: release,
+                duration: duration,
+                img_url: downloadURL
+            });
+            mudra.save().then(()=>{
+                res.redirect('/dailyMotivation');
+            }).catch(err => {
+                res.json({error : err});
+            });
+        });
+    });
+
+    
+});
 
 module.exports = router;

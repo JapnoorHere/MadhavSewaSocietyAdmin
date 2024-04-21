@@ -17,6 +17,9 @@ const mudrasSchema = new mongoose.Schema({
     },
     duration :{
         type : String
+    },
+    img_url :{
+        type : String
     }
 });
 
