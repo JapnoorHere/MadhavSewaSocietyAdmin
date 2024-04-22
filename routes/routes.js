@@ -2,13 +2,23 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const expressFileUpload = require('express-fileupload');
+const nodemailer = require('nodemailer');
 const path = require('path');
 const User = require('../models/users')
 const Volunteer = require('../models/volunteer')
 const DailyMotivation = require('../models/dailyMotivation');
 const Donations = require('../models/donations')
 const Mudras = require('../models/mudras');
+const DifferentlyAbleContactForms = require('../models/differentlyAbleContactForm')
 
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.SENDER_EMAIL,
+      pass: process.env.SENDER_EMAIL_PASSWORD
+    }
+  });
 
 const { initializeApp } = require("firebase/app");
 const {getStorage, ref, getDownloadURL,uploadBytesResumable} = require("firebase/storage");
@@ -36,6 +46,23 @@ router.get('/', (req, res) => {
 router.get('/accept-volunteer/:id', (req, res) => {
     const userId = req.params.id
     Volunteer.findByIdAndUpdate(userId, { status: '1' }).then(() => {
+        Volunteer.findById(userId).then((volunteer) => {
+            var mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: volunteer.email,
+                subject: 'Sending Email using Node.js',
+                text: 'Congratulations! Your volunteer request has been accepted. You will be notified for further details.'
+              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
+        })
+          
         res.redirect('/volunteer');
     }).catch(err => {
         req.json({error : err});
@@ -45,6 +72,22 @@ router.get('/accept-volunteer/:id', (req, res) => {
 router.get('/reject-volunteer/:id', (req, res) => {
     const userId = req.params.id
     Volunteer.findByIdAndUpdate(userId, { status: '-1' }).then(() => {
+        Volunteer.findById(userId).then((volunteer) => {
+            var mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: volunteer.email,
+                subject: 'Sending Email using Node.js',
+                text: 'Sorry! Your volunteer request has been rejected. Please try again later.'
+              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
+        })
         res.redirect('/volunteer');
     }).catch(err => {
         req.json({error : err});
@@ -289,5 +332,83 @@ router.post('/upload-mudra',(req,res)=>{
 
     
 });
+
+router.get('/differentlyAbleContactForm/accept/:id',(req,res)=>{
+    const contactId = req.params.id;
+    DifferentlyAbleContactForms.findByIdAndUpdate(contactId,{status: '1'}).then(()=>{
+        DifferentlyAbleContactForms.findById(userId).then((user) => {
+            var mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: user.email,
+                subject: 'Sending Email using Node.js',
+                text: 'Congratulations! Your request has been accepted. You will be notified for further details.'
+              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
+        })
+        res.redirect('/differentlyAbleContactForm');
+    }).catch(err => {
+        res.json({error : err});
+    })  ;
+})
+
+router.get('/differentlyAbleContactForm/reject/:id',(req,res)=>{
+    const contactId = req.params.id;
+    DifferentlyAbleContactForms.findByIdAndUpdate(contactId,{status: '-1'}).then(()=>{
+        DifferentlyAbleContactForms.findById(userId).then((user) => {
+            var mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: user.email,
+                subject: 'Sending Email using Node.js',
+                text: 'Sorry! Your request has been rejected. Please try again later.'
+              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
+        })
+        res.redirect('/differentlyAbleContactForm');
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
+
+
+router.get('/differentlyAbleContactForm/rejected',(req,res)=>{
+    DifferentlyAbleContactForms.find().then((contacts)=>{
+        res.render('differentlyAbleContact',{contacts: contacts.reverse(),status : '-1'});
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
+
+router.get('/differentlyAbleContactForm/accepted',(req,res)=>{
+    DifferentlyAbleContactForms.find().then((contacts)=>{
+        res.render('differentlyAbleContact',{contacts: contacts.reverse(),status : '1'});
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
+
+router.get('/differentlyAbleContactForm',(req,res)=>{
+    DifferentlyAbleContactForms.find().then((contacts)=>{
+        res.render('differentlyAbleContact',{contacts: contacts.reverse(),status : '0'});
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
 
 module.exports = router;
