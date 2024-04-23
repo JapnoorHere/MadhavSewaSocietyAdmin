@@ -10,7 +10,7 @@ const DailyMotivation = require('../models/dailyMotivation');
 const Donations = require('../models/donations')
 const Mudras = require('../models/mudras');
 const DifferentlyAbleContactForms = require('../models/differentlyAbleContactForm')
-
+const ConnectWithUs = require('../models/connectWithUs')
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -336,7 +336,7 @@ router.post('/upload-mudra',(req,res)=>{
 router.get('/differentlyAbleContactForm/accept/:id',(req,res)=>{
     const contactId = req.params.id;
     DifferentlyAbleContactForms.findByIdAndUpdate(contactId,{status: '1'}).then(()=>{
-        DifferentlyAbleContactForms.findById(userId).then((user) => {
+        DifferentlyAbleContactForms.findById(contactId).then((user) => {
             var mailOptions = {
                 from: process.env.SENDER_EMAIL,
                 to: user.email,
@@ -361,7 +361,7 @@ router.get('/differentlyAbleContactForm/accept/:id',(req,res)=>{
 router.get('/differentlyAbleContactForm/reject/:id',(req,res)=>{
     const contactId = req.params.id;
     DifferentlyAbleContactForms.findByIdAndUpdate(contactId,{status: '-1'}).then(()=>{
-        DifferentlyAbleContactForms.findById(userId).then((user) => {
+        DifferentlyAbleContactForms.findById(contactId).then((user) => {
             var mailOptions = {
                 from: process.env.SENDER_EMAIL,
                 to: user.email,
@@ -410,5 +410,82 @@ router.get('/differentlyAbleContactForm',(req,res)=>{
         res.json({error : err});
     });
 })
+
+
+router.get('/connectWithUs',(req,res)=>{
+    ConnectWithUs.find().then((contacts)=>{
+        res.render('connectWithUs',{contacts: contacts.reverse(),status : '0'});
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
+router.get('/connectWithUs/accept/:id',(req,res)=>{
+    const contactId = req.params.id;
+    ConnectWithUs.findByIdAndUpdate(contactId,{status: '1'}).then(()=>{
+        ConnectWithUs.findById(contactId).then((user) => {
+            var mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: user.email,
+                subject: 'Sending Email using Node.js',
+                text: 'Congratulations! Your request has been accepted. You will be notified for further details.'
+              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
+        })
+        res.redirect('/connectWithUs');
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
+router.get('/connectWithUs/reject/:id',(req,res)=>{
+    const contactId = req.params.id;
+    ConnectWithUs.findByIdAndUpdate(contactId,{status: '-1'}).then(()=>{
+        ConnectWithUs.findById(contactId).then((user) => {
+            var mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: user.email,
+                subject: 'Sending Email using Node.js',
+                text: 'Sorry! Your request has been rejected. Please try again later.'
+              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
+        })
+        res.redirect('/connectWithUs');
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
+router.get('/connectWithUs/rejected',(req,res)=>{
+    ConnectWithUs.find().then((contacts)=>{
+        res.render('connectWithUs',{contacts: contacts.reverse(),status : '-1'});
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
+
+router.get('/connectWithUs/accepted',(req,res)=>{
+    ConnectWithUs.find().then((contacts)=>{
+        res.render('connectWithUs',{contacts: contacts.reverse(),status : '1'});
+    }).catch(err => {
+        res.json({error : err});
+    });
+})
+
 
 module.exports = router;

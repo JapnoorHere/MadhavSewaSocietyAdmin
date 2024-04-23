@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Madhav Sewa Society</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-        <link rel="icon" href="images/mss-logo.png">
+  <link rel="stylesheet" type="text/css"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="icon" href="images/mss-logo.png">
 
 </head>
+
 <style>
     /* Responsive grid layout for contact cards */
     :root {
@@ -119,6 +118,7 @@
         margin: 1rem;
     }
   </style>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-light p-3" style="background-color: #ffa85a ;">
     <div class="container-fluid">
@@ -131,7 +131,7 @@
       <div class=" collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto ">
           <li class="nav-item">
-            <a class="nav-link mx-2" aria-current="page" href="/">Home</a>
+            <a class="nav-link mx-2 " aria-current="page" href="/">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link mx-2" href="/volunteer">Volunteer</a>
@@ -144,10 +144,10 @@
             <a class="nav-link mx-2" href="/donations">Donations</a>
           </li>
            <li class="nav-item">
-            <a class="nav-link mx-2 active" href="/differentlyAbleContactForm">Differently able Contact</a>
+            <a class="nav-link mx-2" href="/differentlyAbleContactForm">Differently able Contact</a>
           </li> 
           <li class="nav-item">
-            <a class="nav-link mx-2" href="/connectWithUs">Connect With Us</a>
+            <a class="nav-link mx-2 active" href="/connectWithUs">Connect With Us</a>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
@@ -164,14 +164,13 @@
       </div>
     </div>
   </nav>
-
     <main>
         <div class="container">
 
-            <h1>Differently Abled Forms</h1>
+            <h1>Connect With US</h1>
             <div class="accept-reject">
-                <a href="/differentlyAbleContactForm/accepted" style="color: skyblue;">Accepted forms</a>
-                <a href="/differentlyAbleContactForm/rejected" style="color: red;" >Rejected forms</a>
+                <a href="/connectWithUs/accepted" style="color: skyblue;">Accepted forms</a>
+                <a href="/connectWithUs/rejected" style="color: red;" >Rejected forms</a>
             </div>
         </div>
   <div class="contact-grid">
@@ -179,27 +178,20 @@
     <% for (const contact of contacts) { %>
         <% if(statuss === contact.status){ %>
       <div class="contact-card">
-        <a target="_blank" href="<%=contact.img_url  %>">
-        <div class="certificate-img">
-            <h5>Disability Certificate</h5>
-        </div>
-    </a>
+        
         <div class="nameAndDate">
             <h3 class="contact-name"><%= contact.name %></h3> 
-            <p class="contact-dateAndTime"><%= contact.dateAndTime %></> 
+            <p class="contact-dateAndTime"><%= contact.uploadDateAndTime %></> 
         </div>
         <p class="contact-info"><b>Email:</b> <%= contact.email %></p>
         <p class="contact-info"><b>Phone:</b> <%= contact.phone %></p>
-        <p class="contact-info"><b>Gender:</b> <%= contact.gender %></p>
-        <p class="contact-info"><b>Father Name:</b> <%= contact.father %></p>
-        <p class="contact-info"><b>Mother Name:</b> <%= contact.mother %></p>
-        <p class="contact-info"><b>Qualifications:</b> <%= contact.qualifications %></p>
-        <p class="contact-info"><b>Percentage of disability:</b> <%= contact.percentage %></p>
-        <p class="contact-info"><b>Services Needed:</b> <%= contact.services %></p>
+        <p class="contact-info"><b>Date And Time:</b> <%= contact.dateAndTime.replace("T"," ") %></p>
+        <p class="contact-info"><b>Invitation type:</b> <%= contact.invite %></p>
+        <p class="contact-info"><b>Place</b> <%= contact.place %></p>
         <%  if(status === '0'){%> 
         <div>
-          <a href="/differentlyAbleContactForm/accept/<%=contact._id  %>"><button class="btn btn-primary">Accept</button></a>
-          <a href="/differentlyAbleContactForm/reject/<%=contact._id  %>"><button class="btn btn-danger">Reject</button></a>
+          <a href="/connectWithUs/accept/<%=contact._id  %>"><button class="btn btn-primary">Accept</button></a>
+          <a href="/connectWithUs/reject/<%=contact._id  %>"><button class="btn btn-danger">Reject</button></a>
         </div>
         <% } %>
       </div>
@@ -208,7 +200,8 @@
     <% } %>
   </div>
     </main>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>

@@ -5,11 +5,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const session = require('express-session');
-const exp = require('constants');
 
 //middlewares
 app.use(express.urlencoded({extended : true}));
 app.use(express.static('views'));
+app.use(express.static('images'));
 app.use(express.json());
 app.use(session({
     secret : "this_is_secret",
