@@ -142,7 +142,7 @@ router.get('/dailyMotivation',(req,res)=>{
 
 router.post('/upload-daily-motivation', (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
+        return res.status(400).send('No files were uploaded.')
     }
 
     let videoFile = req.files.videoFile;
