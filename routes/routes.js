@@ -66,6 +66,7 @@ router.post('/login', async (req, res) => {
 
         // Check password
         const isMatch = await bcrypt.compare(password, admin.password);
+        // console.log(admin.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password.' });
         }
@@ -421,7 +422,7 @@ router.get('/differentlyAbleContactForm/accept/:id', (req, res) => {
                   from: process.env.SENDER_EMAIL,
                   to: updatedContact.email,
                   subject: 'Request Accepted',
-                  text: 'Congratulations! Your request has been accepted. You will be notified for further details.'
+                  text: 'Congratulations! Your Differently Abled Contact form request has been accepted. We will contact you shortly.'
               };
               transporter.sendMail(mailOptions);
 
@@ -446,7 +447,7 @@ router.get('/differentlyAbleContactForm/reject/:id', (req, res) => {
                   from: process.env.SENDER_EMAIL,
                   to: updatedContact.email,
                   subject: 'Request Rejected',
-                  text: 'Sorry! Your request has been rejected. Please try again later.'
+                  text: 'Sorry! Your request has been rejected because of some reasons.'
               };
               transporter.sendMail(mailOptions);
 
