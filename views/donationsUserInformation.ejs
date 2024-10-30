@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madhav Sewa Society</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="icon" href="images/mss-logo.png">
+
+    <style>
+        :root {
+            --light-orange-color: #fff1e2;
+            --dark-orange-color: #ffa85a;
+            --fade-light-orange-color: #fff8f180;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            background-color: var(--dark-orange-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--light-orange-color);
+        }
+
+        * {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+        }
+
+        th,
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+            max-height: 50px;
+        }
+
+        tr:hover td {
+            white-space: normal;
+            height: auto;
+        }
+
+        @media (max-width: 575px) {
+            .table-responsive {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+                border: 1px solid var(--light-orange-color);
+            }
+        }
+
+
+        th,
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+            max-height: 50px;
+        }
+
+        tr:hover td {
+            white-space: normal;
+            height: auto;
+        }
+
+        .table-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .accept-reject {
+            display: flex;
+            gap: 0.5rem;
+            align-self: flex-end;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light p-3" style="background-color: #ffa85a ;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" style="color: white;">Madhav Sewa Society </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto ">
+              <li class="nav-item">
+                <a class="nav-link mx-2" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-2" href="/volunteer">Volunteer</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-2" href="/dailyMotivation">Daily Motivation & Mudras</a>
+              </li>
+    
+              <li class="nav-item">
+                <a class="nav-link mx-2 active" href="/donations">Donations</a>
+              </li>
+               <li class="nav-item">
+                <a class="nav-link mx-2" href="/differentlyAbleContactForm">Differently able Contact</a>
+              </li> 
+              <li class="nav-item">
+                <a class="nav-link mx-2" href="/connectWithUs">Connect With Us</a>
+              </li>
+            </ul>
+            <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
+              <li class="nav-item mx-2">
+                
+              </li>
+              <li class="nav-item mx-2">
+                
+              </li>
+              <li class="nav-item mx-2">
+                
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    <div class="table-container container mt-5">
+        <h1><%= donation.donation_name %></h1>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>S No.</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Amount</th>
+                        <th>Date and Time</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% var c = 0 %>
+                    <% for(let i=0; i<users.length; i++) { %>
+                            <% c++ %>
+                        <tr>
+                            <td>
+                                <%= c %>
+                            </td>
+                            <td>
+                                <%=users[i].name %>
+                            </td>
+                            <td>
+                               <%= users[i].phone %>
+                            </td>
+                                <td><%= users[i].email %></td>
+                            <td>
+                                <%= donation.donation_fund %>
+                            </td>
+                            
+                            <td>
+                                <%= donation.donation_date_time %>
+                            </td>
+                            
+                                
+                        </tr>
+                        <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

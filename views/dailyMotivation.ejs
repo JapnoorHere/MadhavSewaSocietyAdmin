@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Madhav Sewa Society</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="icon" href="images/mss-logo.png">
+
+  <style>
+    :root {
+      --light-orange-color: #fff8f1;
+      --dark-orange-color: #ffa85a;
+      --fade-light-orange-color: #fff8f180;
+
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      background-color: var(--dark-orange-color);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--light-orange-color);
+    }
+
+    * {
+      margin: 0;
+      box-sizing: border-box;
+      padding: 0;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
+    body {
+      
+      margin: 0;
+      padding: 0;
+      background-color: var(--light-orange-color);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    #upload-section {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #upload-section h2 {
+      margin-bottom: 20px;
+    }
+
+    #upload-label {
+      display: inline-block;
+      padding: 1rem;
+      cursor: pointer;
+      border: 2px dashed #ccc;
+      border-radius: 5px;
+    }
+
+    #upload-label:hover {
+      background-color: var(--fade-light-orange-color);
+    }
+
+    #upload-button {
+      margin-top: 1rem;
+      background-color: var(--dark-orange-color);
+      color: #fff;
+      border: 1px solid transparent;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out 0s;
+      color: white;
+    }
+
+    #upload-button:hover {
+      background-color: var(--light-orange-color);
+      color: black;
+      border: 1px solid var(--dark-orange-color);
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 0 10px;
+      }
+
+      #upload-section {
+        padding: 20px;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      text-decoration: underline;
+      margin-top: 5rem;
+    }
+
+    .form{
+      background-color: white;
+      padding: 2rem;
+    }
+
+    .mudra-form {
+      border-radius: 8px;
+      background-color: var(--light-orange-color);
+      padding: 1rem;
+      width: 80%;
+      margin: 0 auto;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    input,
+    textarea {
+      background-color: white;
+      border: none;
+      padding: 1rem 2rem 1rem 2rem;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 150px;
+      padding: 0.5rem 1rem 0.5rem 1rem;
+      border: 2px solid transparent;
+      background-color: var(--dark-orange-color);
+      color: white;
+      border-radius: 8px;
+      margin: 0 auto;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      border: 2px solid var(--dark-orange-color);
+      color: black;
+      background-color: var(--light-orange-color);
+    }
+
+
+    @media screen and (max-width: 600px) {
+      
+      h5 {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light p-3" style="background-color: #ffa85a ;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" style="color: white;">Madhav Sewa Society </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto ">
+          <li class="nav-item">
+            <a class="nav-link mx-2 " aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2" href="/volunteer">Volunteer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2 active" href="/dailyMotivation">Daily Motivation & Mudras</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link mx-2" href="/donations">Donations</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link mx-2" href="/differentlyAbleContactForm">Differently able Contact</a>
+          </li> 
+          <li class="nav-item">
+            <a class="nav-link mx-2" href="/connectWithUs">Connect With Us</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
+          <li class="nav-item mx-2">
+            
+          </li>
+          <li class="nav-item mx-2">
+            
+          </li>
+          <li class="nav-item mx-2">
+            
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="container">
+    <section id="upload-section">
+      <h2>Upload Your Daily Motivational Video</h2>
+      <form action="/upload-daily-motivation" method="post" enctype="multipart/form-data">
+        <label for="video-upload" id="upload-label">Choose a video to upload</label>
+        <input type="file" id="video-upload" name="videoFile" accept="video/*" style="display: none;">
+        <br>
+        <button type="submit" id="upload-button">Upload</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="form">
+    <div class="form-container">
+      <div class="form-content">
+        <h1>Add Mudra</h1>
+        <form  class="mudra-form" action="/upload-mudra" enctype="multipart/form-data" method="post">
+          <div class="upload-img">
+            <h5>Upload Image : </h5>
+            <input accept="image/*" id="mudra-img" type="file" name="mudra_img">
+          </div>
+          <input type="text" placeholder="Mudra Name" name="name">
+          <textarea type="text" placeholder="Mudra Description" name="description" rows="6"></textarea>
+          <textarea type="text" placeholder="Steps to perform Mudra" name="perform" rows="10"></textarea>
+          <textarea type="text" placeholder="Benefits" name="benefits" rows="6"></textarea>
+          <textarea type="text" placeholder="Release" name="release" rows="3"></textarea>
+          <textarea type="text" placeholder="Duration" name="duration" rows="3"></textarea>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</html>

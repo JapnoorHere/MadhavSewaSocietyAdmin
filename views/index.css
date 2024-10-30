@@ -1,0 +1,127 @@
+:root {
+    --light-orange-color: #fff8f1;
+    --dark-orange-color: #ffa85a;
+    --fade-light-orange-color: #fff8f180;
+
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: var(--dark-orange-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--light-orange-color); 
+}
+
+* {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+
+body {
+    overflow-x: hidden;
+}
+
+.values {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+
+.values-container {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.values-container .values-content {
+    grid-template-rows: repeat(1, 1fr);
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.values-card {
+    margin: 1rem;
+    gap: 0.8rem;
+    background-color: var(--light-orange-color);
+    border: 1px solid var(--dark-orange-color);
+    height: 380px;
+    padding: 0 1rem 0 1rem;
+    border-radius: 10px;
+    display: flex;
+    width: 330px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s linear 0s;
+}
+
+.values-card:hover {
+    scale: 1.05;
+    box-shadow: 0px 5px 15px var(--dark-orange-color);
+}
+
+.values-card p {
+    text-align: center;
+}
+
+.values-card h1 {
+    font-size: 1.7rem;
+}
+
+
+.values-card .img-container {
+    height: 130px;
+    width: 130px;
+
+}
+
+.values-card .img-container img {
+    height: 100%;
+    width: 100%;
+
+}
+
+
+@media screen and (max-width: 1190px) {
+    .values-container .values-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0;
+    }
+
+}
+
+@media screen and (max-width: 775px) {
+    .values-container .values-content {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+}
+
+@media screen and (max-width: 365px) {
+    .values-card {
+        width: 250px;
+    }
+
+    .values-card h1 {
+        font-size: 1.3rem
+    }
+
+    .values-card p {
+        font-size: 0.8rem;
+    }
+
+    .values-card .img-container {
+        height: 80px;
+        width: 80px;
+    }
+
+
+}
