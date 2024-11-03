@@ -9,6 +9,7 @@ const EventsPage = () => {
         date: '',
         description: '',
     });
+    const [loading, setLoading] = useState(false); // Add loading state
 
     // Handle event form changes
     const handleEventChange = (e) => {
@@ -23,6 +24,8 @@ const EventsPage = () => {
     // Handle event form submit
     const handleEventSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); // Set loading to true when form submission starts
+
         const formData = new FormData();
         formData.append('event_img', eventForm.event_img);  // Image file
         formData.append('date', eventForm.date);
@@ -39,6 +42,8 @@ const EventsPage = () => {
         } catch (error) {
             console.error(error);
             toast.error('Error adding event');
+        } finally {
+            setLoading(false); // Stop the loader after the form submission is completed
         }
     };
 
@@ -46,6 +51,15 @@ const EventsPage = () => {
         <div>
             {/* Toast Container */}
             <ToastContainer />
+
+            {/* Show the loader if loading is true */}
+            {loading && 
+            
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="loader border-t-4 border-[#ffa85a] rounded-full w-16 h-16 animate-spin"></div>
+        </div>
+            
+            }
 
             {/* Events Section */}
             <div className="container mx-auto my-10 p-4">

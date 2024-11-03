@@ -14,7 +14,8 @@ const Donate = () => {
   const [donations, setDonations] = useState([]);
   const [donors, setDonors] = useState([]);
   const [selectedDonation, setSelectedDonation] = useState(null);
-  const [showDonations, setShowDonations] = useState(false); // Toggle between form and list
+  const [showDonations, setShowDonations] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
 
   // Fetch donations when component loads
   useEffect(() => {
@@ -22,35 +23,42 @@ const Donate = () => {
   }, []);
 
   const fetchDonations = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('http://localhost:4100/donations/list');
       setDonations(response.data.donations);
     } catch (error) {
       toast.error('Failed to load donations');
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchDonors = async (donationName) => {
+    setLoading(true);
     try {
       const response = await axios.get(`http://localhost:4100/donations/${donationName}`);
       setDonors(response.data.users);
       setSelectedDonation(donationName);
     } catch (error) {
       toast.error('Failed to load donors for this donation');
+    } finally {
+      setLoading(false);
     }
   };
 
   const deleteDonation = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this donation?')) {
-      return;
-    }
+    if (!window.confirm('Are you sure you want to delete this donation?')) return;
 
+    setLoading(true);
     try {
       await axios.get(`http://localhost:4100/deleteDonation/${id}`);
       toast.success('Donation deleted successfully');
-      fetchDonations(); // Refresh donation list
+      fetchDonations();
     } catch (error) {
       toast.error('Failed to delete donation');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,11 +80,10 @@ const Donate = () => {
     formPayload.append('donation_fund', formData.donation_fund);
     formPayload.append('donation_image', formData.donation_image);
 
+    setLoading(true);
     try {
       const response = await axios.post('http://localhost:4100/upload-donation', formPayload, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       if (response.status === 200) {
@@ -87,10 +94,12 @@ const Donate = () => {
           donation_fund: '',
           donation_image: null,
         });
-        fetchDonations(); // Refresh donation list after submission
+        fetchDonations();
       }
     } catch (error) {
       toast.error(error.response?.data?.error || 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,8 +107,14 @@ const Donate = () => {
     <div className="container mx-auto p-4">
       <ToastContainer />
 
-      {/* Toggle Button to Show All Donations */}
-      <div className="text-center my-4">
+      {/* Loading overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="loader border-t-4 border-[#ffa85a] rounded-full w-16 h-16 animate-spin"></div>
+        </div>
+      )}
+
+      <div className="text-end my-4">
         <button
           onClick={() => setShowDonations(!showDonations)}
           className="w-full lg:w-auto bg-[#ffa85a] text-white py-3 px-6 rounded-lg hover:bg-[#fff8f1] hover:text-black border-2 border-transparent hover:border-[#ffa85a] transition-all duration-300"
@@ -108,7 +123,6 @@ const Donate = () => {
         </button>
       </div>
 
-      {/* Donation Form */}
       {!showDonations && (
         <div className="form mt-8">
           <div className="form-container max-w-screen-lg mx-auto px-4">
@@ -163,18 +177,18 @@ const Donate = () => {
         </div>
       )}
 
-      {/* Donation List */}
       {showDonations && (
         <div className="container mx-auto my-8 px-4">
-          <h2 className="text-2xl text-center mb-4">Donation List</h2>
+          <h2 className="text-2xl text-center mb-4 font-semibold">Donation List</h2>
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white table-auto border-collapse">
               <thead>
                 <tr>
-                  <th className="py-2 px-4 border-b">Donation Name</th>
-                  <th className="py-2 px-4 border-b">Description</th>
-                  <th className="py-2 px-4 border-b">Fund</th>
-                  <th className="py-2 px-4 border-b">Actions</th>
+                  <th className="py-2 px-4 border-b text-left">Donation Name</th>
+                  <th className="py-2 px-4 border-b text-left">Description</th>
+                  <th className="py-2 px-4 border-b text-left">Fund</th>
+                  <th className="py-2 px-4 border-b text-left">Upload Date</th>
+                  <th className="py-2 px-4 border-b text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -188,6 +202,7 @@ const Donate = () => {
                     </td>
                     <td className="py-2 px-4 border-b">{donation.donation_description}</td>
                     <td className="py-2 px-4 border-b">{donation.donation_fund}</td>
+                    <td className="py-2 px-4 border-b">{donation.donation_date_time}</td>
                     <td className="py-2 px-4 border-b">
                       <button
                         className="bg-red-500 text-white px-3 py-1 rounded"
@@ -202,23 +217,26 @@ const Donate = () => {
             </table>
           </div>
 
-          {/* Show donors list if a donation is selected */}
           {selectedDonation && donors.length > 0 && (
             <div className="mt-8">
-              <h2 className="text-xl text-center mb-4">Donors for {selectedDonation}</h2>
+              <h2 className="text-xl text-center mb-4 font-semibold">Donors for {selectedDonation}</h2>
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white table-auto border-collapse">
                   <thead>
                     <tr>
-                      <th className="py-2 px-4 border-b">Donor Name</th>
-                      <th className="py-2 px-4 border-b">Email</th>
+                      <th className="py-2 px-4 border-b text-left">Donor Name</th>
+                      <th className="py-2 px-4 border-b text-left">Email</th>
+                      <th className="py-2 px-4 border-b text-left">Phone</th>
+                      <th className="py-2 px-4 border-b text-left">Donation Amount</th>
                     </tr>
                   </thead>
                   <tbody>
                     {donors.map((donor) => (
                       <tr key={donor._id}>
-                        <td className="py-2 px-4 border-b">{donor.name}</td>
-                        <td className="py-2 px-4 border-b">{donor.email}</td>
+                        <td className="py-2 px-4 border-b">{donor.user_name}</td>
+                        <td className="py-2 px-4 border-b">{donor.user_email}</td>
+                        <td className="py-2 px-4 border-b">{donor.user_number}</td>
+                        <td className="py-2 px-4 border-b">{donor.user_donation_amount}</td>
                       </tr>
                     ))}
                   </tbody>

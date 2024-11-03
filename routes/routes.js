@@ -5,12 +5,19 @@ const expressFileUpload = require('express-fileupload');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const User = require('../models/users')
+const Admin = require('../models/admin')
 const Volunteer = require('../models/volunteer')
 const DailyMotivation = require('../models/dailyMotivation');
 const Donations = require('../models/donations')
 const Mudras = require('../models/mudras');
 const DifferentlyAbleContactForms = require('../models/differentlyAbleContactForm')
 const Events = require('../models/events');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const bodyParser = require("body-parser");
+
+router.use(bodyParser.json());
+
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -42,6 +49,38 @@ router.get('/', (req, res) => {
     res.render('index');
 })
 
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required.' });
+    }
+
+    try {
+        // Check if user exists
+        const admin = await Admin.findOne({ email });
+        if (!admin) {
+            return res.status(401).json({ message: 'Admin not available' });
+        }
+
+        // Check password
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid email or password.' });
+        }
+
+        // Generate JWT
+        const token = jwt.sign({ id: admin._id, email: admin.email }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        // localStorage.setItem('token', token);
+        // localStorage.setItem('user', JSON.stringify(user));
+        res.json({ admin, token, message: 'Login successful!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+});
+
 // Accept volunteer
 router.get('/accept-volunteer/:id', (req, res) => {
     const userId = req.params.id;
@@ -52,7 +91,7 @@ router.get('/accept-volunteer/:id', (req, res) => {
                 from: process.env.SENDER_EMAIL,
                 to: volunteer.email,
                 subject: 'Volunteer Request Accepted',
-                text: 'Congratulations! Your volunteer request has been accepted. You will be notified for further details.'
+                text: 'Congratulations! Your volunteer request has been accepted. Shortly, We will join you in our WhatsApp group for further details.'
             };
 
             transporter.sendMail(mailOptions, (error, info) => {
@@ -77,7 +116,7 @@ router.get('/reject-volunteer/:id', (req, res) => {
                 from: process.env.SENDER_EMAIL,
                 to: volunteer.email,
                 subject: 'Volunteer Request Rejected',
-                text: 'Sorry! Your volunteer request has been rejected. Please try again later.'
+                text: 'Sorry! Your volunteer request has been rejected. Better Luck next time.'
             };
 
             transporter.sendMail(mailOptions, (error, info) => {
@@ -251,20 +290,52 @@ router.get('/donations/list', (req, res) => {
 
 router.get('/donations/:name', (req, res) => {
     const donationName = req.params.name;
+    console.log(donationName);
+    
     Donations.findOne({ donation_name: donationName }).then((donation) => {
         if (donation) {
-            User.find({ _id: { $in: donation.users } }).then((users) => {
-                res.json({ users, donation });
+            // Extract the _id values from each user in the donation's users array
+            const userIds = donation.users.map(user => user.id);
+
+            // Use the array of _id values to find matching users
+            User.find({ _id: { $in: userIds } }).then((users) => {
+                console.log("Users:", users);
+                console.log("Donation:", donation);
+                const date_and_time = donation.users[users.id].donation_date_time
+                // Map users with their submitted date and time
+                const usersWithDateTime = users.map(user => ({
+                    id: user._id,
+                    name: user.name,  // Assuming users have a `name` field
+                    donation_date_time: date_and_time,
+                    email: user.email,
+                    phone: user.phone,
+                    
+                    // Replace with actual field name
+                    // Add any other user fields you want here
+                }));
+
+                // Respond with donation details and users including their submitted date and time
+                res.json({ 
+                    users: usersWithDateTime, 
+                    donationDetails: {
+                        name: donation.donation_name,
+                        description: donation.donation_description,
+                        fund: donation.donation_fund,
+                        imageUrl: donation.donation_image_url,
+                        dateTime: donation.donation_date_time
+                    }
+                });
             }).catch(err => {
-                res.status(500).json({ error: err });
+                res.status(500).json({ error: err.message });
             });
         } else {
             res.status(404).json({ message: 'Donation not found' });
         }
     }).catch(err => {
-        res.status(500).json({ error: err });
+        res.status(500).json({ error: err.message });
     });
 });
+
 
 
 router.get('/deleteDonation/:id', (req, res) => {

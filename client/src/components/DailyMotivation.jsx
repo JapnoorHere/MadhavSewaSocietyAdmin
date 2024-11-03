@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const DailyMotivation = () => {
     const [videoFile, setVideoFile] = useState(null);
+    const [videoLoading, setVideoLoading] = useState(false);
+    const [mudraLoading, setMudraLoading] = useState(false);
     const [mudraForm, setMudraForm] = useState({
         mudra_img: null,
         name: '',
@@ -30,77 +32,72 @@ const DailyMotivation = () => {
         }
     };
 
-
     // Handle video upload form submit
     const handleVideoSubmit = async (e) => {
         e.preventDefault();
+        setVideoLoading(true);
         const formData = new FormData();
         formData.append('videoFile', videoFile);
 
         try {
             const response = await axios.post('http://localhost:4100/upload-daily-motivation', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
-            toast.success(`Video uploaded successfully!`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-
-            // Reset video file
-            setVideoFile(null);
-
+            toast.success(`Video uploaded successfully!`);
+            setVideoFile(null); // Reset video file
         } catch (error) {
             console.error(error);
-            toast.error('Error uploading video', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            toast.error('Error uploading video');
+        } finally {
+            setVideoLoading(false);
         }
     };
 
     // Handle mudra form submit
     const handleMudraSubmit = async (e) => {
         e.preventDefault();
+        setMudraLoading(true);
         const formData = new FormData();
-        formData.append('mudra_img', mudraForm.mudra_img);  // Image file
+        formData.append('mudra_img', mudraForm.mudra_img);
         formData.append('name', mudraForm.name);
         formData.append('description', mudraForm.description);
         formData.append('perform', mudraForm.perform);
         formData.append('benefits', mudraForm.benefits);
         formData.append('release', mudraForm.release);
         formData.append('duration', mudraForm.duration);
-    
+
         try {
             const response = await axios.post('http://localhost:4100/upload-mudra', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
             toast.success('Mudra added successfully!');
-            setMudraForm({ /* Reset the form */ });
+            setMudraForm({
+                mudra_img: null,
+                name: '',
+                description: '',
+                perform: '',
+                benefits: '',
+                release: '',
+                duration: ''
+            });
         } catch (error) {
             console.error(error);
             toast.error('Error adding mudra');
+        } finally {
+            setMudraLoading(false);
         }
     };
-    
 
     return (
         <div>
-            {/* Toast Container */}
             <ToastContainer />
+
+            {/* Loading Indicator */}
+            {(videoLoading || mudraLoading) && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="w-16 h-16 border-t-4 border-[#ffa85a] border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
 
             {/* Upload Section */}
             <div className="container mx-auto my-10 p-4">
@@ -111,7 +108,7 @@ const DailyMotivation = () => {
                             htmlFor="video-upload"
                             className="block py-4 px-8 cursor-pointer border-2 border-dashed border-gray-400 rounded-lg mb-4"
                         >
-                            Choose a video to upload
+                            {videoFile ? videoFile.name : "Choose a video to upload"}
                         </label>
                         <input
                             type="file"
@@ -145,7 +142,6 @@ const DailyMotivation = () => {
                                 className="bg-white p-4 border rounded-lg"
                                 onChange={handleMudraChange}
                             />
-
                         </div>
                         <input
                             type="text"
@@ -153,6 +149,7 @@ const DailyMotivation = () => {
                             placeholder="Mudra Name"
                             className="bg-white p-4 border rounded-lg"
                             onChange={handleMudraChange}
+                            value={mudraForm.name}
                         />
                         <textarea
                             name="description"
@@ -160,6 +157,7 @@ const DailyMotivation = () => {
                             rows="6"
                             className="bg-white p-4 border rounded-lg"
                             onChange={handleMudraChange}
+                            value={mudraForm.description}
                         ></textarea>
                         <textarea
                             name="perform"
@@ -167,6 +165,7 @@ const DailyMotivation = () => {
                             rows="10"
                             className="bg-white p-4 border rounded-lg"
                             onChange={handleMudraChange}
+                            value={mudraForm.perform}
                         ></textarea>
                         <textarea
                             name="benefits"
@@ -174,6 +173,7 @@ const DailyMotivation = () => {
                             rows="6"
                             className="bg-white p-4 border rounded-lg"
                             onChange={handleMudraChange}
+                            value={mudraForm.benefits}
                         ></textarea>
                         <textarea
                             name="release"
@@ -181,6 +181,7 @@ const DailyMotivation = () => {
                             rows="3"
                             className="bg-white p-4 border rounded-lg"
                             onChange={handleMudraChange}
+                            value={mudraForm.release}
                         ></textarea>
                         <textarea
                             name="duration"
@@ -188,6 +189,7 @@ const DailyMotivation = () => {
                             rows="3"
                             className="bg-white p-4 border rounded-lg"
                             onChange={handleMudraChange}
+                            value={mudraForm.duration}
                         ></textarea>
                         <button
                             type="submit"

@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const navigate = useNavigate();
+    const location = useLocation();
     const toggleNavbar = () => {
         setIsOpen(!isOpen);
     };
+
+    useEffect(()=>{
+        const user = localStorage.getItem('user');
+        if(!user){
+            if(location.pathname !== '/auth/login')
+                
+                navigate('/auth/login');
+        }else{
+            if(location.pathname === '/auth/login')
+                navigate('/');
+        }
+    },[])
+
+    const handleLogout = ()=>{
+        localStorage.removeItem('user');
+        navigate('/auth/login');
+    }
 
     return (
         <nav className="bg-orange-400 p-3">
@@ -43,6 +63,11 @@ const Navbar = () => {
                         <li className="nav-item">
                             <a className="block text-white px-3 py-2 rounded hover:bg-orange-500" href="/events">Events</a>
                         </li>
+                        {
+                        localStorage.getItem('user') && <li className="nav-item">
+                            <a className="block text-white px-3 py-2 rounded hover:bg-orange-500 cursor-pointer" onClick={handleLogout}  >Logout</a>
+                        </li>
+                        }
                         
                         
                     </ul>
