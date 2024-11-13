@@ -16,12 +16,27 @@ const donationSchema = new mongoose.Schema({
         type: String,
         default: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
     },
-    users: [{
+    donors: [{
         id: String,
-        donation_date_time: {
+        date_time: {
             type: String,
             default: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
-        }
+        },
+        name : {
+            type : String,
+            required : true,
+    
+        },
+        email : {
+            type : String,
+            required : true,
+            unique : true
+        },
+        phone : {
+            type : String,
+            required : true,
+            unique : true
+        },
     }]
 }, { collection: 'donations' });
 
