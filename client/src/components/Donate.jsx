@@ -25,7 +25,7 @@ const Donate = () => {
   const fetchDonations = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:4100/donations/list');
+      const response = await axios.get('https://madhav-sewa-society-admin-v7wo.vercel.app/donations/list');
       setDonations(response.data.donations);
     } catch (error) {
       toast.error('Failed to load donations');
@@ -37,7 +37,7 @@ const Donate = () => {
   const fetchDonors = async (donationName) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:4100/donations/${donationName}`);
+      const response = await axios.get(`https://madhav-sewa-society-admin-v7wo.vercel.app/donations/${donationName}`);
       setDonors(response.data.users);
       setSelectedDonation(donationName);
     } catch (error) {
@@ -52,7 +52,7 @@ const Donate = () => {
 
     setLoading(true);
     try {
-      await axios.get(`http://localhost:4100/deleteDonation/${id}`);
+      await axios.get(`https://madhav-sewa-society-admin-v7wo.vercel.app/deleteDonation/${id}`);
       toast.success('Donation deleted successfully');
       fetchDonations();
     } catch (error) {
@@ -82,7 +82,7 @@ const Donate = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:4100/upload-donation', formPayload, {
+      const response = await axios.post('https://madhav-sewa-society-admin-v7wo.vercel.app/upload-donation', formPayload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

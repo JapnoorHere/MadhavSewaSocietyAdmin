@@ -29,7 +29,7 @@ const Login = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:4100/login', { email, password });
+            const response = await axios.post('https://madhav-sewa-society-admin-v7wo.vercel.app/login', { email, password });
             if (response.status >= 200 && response.status < 300) {
                 toast.success('Login successful!');
                 const userData = response.data.user;

@@ -10,7 +10,7 @@ const BecomeVolunteer = () => {
         // Fetch volunteers based on status
         const fetchVolunteers = async () => {
             try {
-                const response = await axios.get(`http://localhost:4100/volunteer?status=${status}`);
+                const response = await axios.get(`https://madhav-sewa-society-admin-v7wo.vercel.app/volunteer?status=${status}`);
                 setVolunteers(response.data);
             } catch (error) {
                 console.error("There was an error fetching volunteers!", error);
@@ -22,9 +22,9 @@ const BecomeVolunteer = () => {
 
     const handleVolunteerAction = async (id, action) => {
         try {
-            await axios.get(`http://localhost:4100/${action}-volunteer/${id}`);
+            await axios.get(`https://madhav-sewa-society-admin-v7wo.vercel.app/${action}-volunteer/${id}`);
             // Refresh volunteers after action
-            const response = await axios.get(`http://localhost:4100/volunteer?status=${status}`);
+            const response = await axios.get(`https://madhav-sewa-society-admin-v7wo.vercel.app/volunteer?status=${status}`);
             setVolunteers(response.data);
         } catch (error) {
             console.error(`There was an error ${action === 'accept' ? 'accepting' : 'rejecting'} the volunteer!`, error);

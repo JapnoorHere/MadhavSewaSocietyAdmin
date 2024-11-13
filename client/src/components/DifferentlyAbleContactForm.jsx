@@ -7,7 +7,7 @@ const DifferentlyAbledForms = () => {
 
   // Fetch contacts from the backend
   useEffect(() => {
-    axios.get('http://localhost:4100/differentlyAbleContactForm')
+    axios.get('https://madhav-sewa-society-admin-v7wo.vercel.app/differentlyAbleContactForm')
       .then(response => {
         setContacts(response.data.contacts);
       })
@@ -18,7 +18,7 @@ const DifferentlyAbledForms = () => {
 
   // Handle Accept
   const handleAccept = (id) => {
-    axios.get(`http://localhost:4100/differentlyAbleContactForm/accept/${id}`)
+    axios.get(`https://madhav-sewa-society-admin-v7wo.vercel.app/differentlyAbleContactForm/accept/${id}`)
       .then(() => {
         setContacts(contacts.map(contact => 
           contact._id === id ? { ...contact, status: '1' } : contact
@@ -29,7 +29,7 @@ const DifferentlyAbledForms = () => {
 
   // Handle Reject
   const handleReject = (id) => {
-    axios.get(`http://localhost:4100/differentlyAbleContactForm/reject/${id}`)
+    axios.get(`https://madhav-sewa-society-admin-v7wo.vercel.app/differentlyAbleContactForm/reject/${id}`)
       .then(() => {
         setContacts(contacts.map(contact => 
           contact._id === id ? { ...contact, status: '-1' } : contact

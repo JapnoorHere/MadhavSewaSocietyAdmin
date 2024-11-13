@@ -32,7 +32,7 @@ const EventsPage = () => {
         formData.append('description', eventForm.description);
 
         try {
-            const response = await axios.post('http://localhost:4100/upload-event', formData, {
+            const response = await axios.post('https://madhav-sewa-society-admin-v7wo.vercel.app/upload-event', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

@@ -40,7 +40,7 @@ const DailyMotivation = () => {
         formData.append('videoFile', videoFile);
 
         try {
-            const response = await axios.post('http://localhost:4100/upload-daily-motivation', formData, {
+            const response = await axios.post('https://madhav-sewa-society-admin-v7wo.vercel.app/upload-daily-motivation', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             toast.success(`Video uploaded successfully!`);
@@ -67,7 +67,7 @@ const DailyMotivation = () => {
         formData.append('duration', mudraForm.duration);
 
         try {
-            const response = await axios.post('http://localhost:4100/upload-mudra', formData, {
+            const response = await axios.post('https://madhav-sewa-society-admin-v7wo.vercel.app/upload-mudra', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             toast.success('Mudra added successfully!');
